@@ -1,0 +1,52 @@
+export enum EstatusHomologacion {
+  PENDIENTE = 'Pendiente',
+  APROBADO = 'Aprobado',
+  RECHAZADO = 'Rechazado',
+  SIN_DOCUMENTOS = 'Sin Documentos'
+}
+
+export class Homologacion {
+  id: string;
+  estudianteId: string;
+  carreraCun?: string;
+  estatus: EstatusHomologacion;
+  jornada?: string;
+  modalidad?: string;
+  ciudad?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  institucion?: string;
+  carreraHom?: string;
+  fechaGrado?: Date;
+  nivelEstudio?: string;
+
+  constructor(params: {
+    id?: string;
+    estudianteId: string;
+    carreraCun?: string;
+    estatus?: EstatusHomologacion;
+    jornada?: string;
+    modalidad?: string;
+    ciudad?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+    institucion?: string;
+    carreraHom?: string;
+    fechaGrado?: Date;
+    nivelEstudio?: string;
+  }) {
+    this.id = params.id || '';
+    this.estudianteId = params.estudianteId;
+    this.carreraCun = params.carreraCun;
+    this.estatus = params.estatus || EstatusHomologacion.SIN_DOCUMENTOS;
+    this.jornada = params.jornada;
+    this.modalidad = params.modalidad;
+    this.ciudad = params.ciudad;
+    this.createdAt = params.createdAt || new Date();
+    this.updatedAt = params.updatedAt || new Date();
+    this.institucion = params.institucion;
+    this.carreraHom = params.carreraHom;
+    this.fechaGrado = params.fechaGrado;
+    this.nivelEstudio = params.nivelEstudio;
+  }
+}
