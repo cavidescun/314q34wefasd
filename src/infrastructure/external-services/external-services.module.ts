@@ -1,4 +1,3 @@
-// src/infrastructure/external-services/external-services.module.ts
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { S3StorageService } from './storage/storage.service';

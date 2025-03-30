@@ -3,7 +3,12 @@ import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client
 import { ConfigService } from '@nestjs/config';
 
 export interface StorageServiceInterface {
-  subirDocumento(nombreArchivo: string, buffer: Buffer, contentType?: string): Promise<string>;
+  subirDocumento(
+    numeroIdentificacion: string, 
+    tipoDocumento: string, 
+    buffer: Buffer, 
+    contentType?: string
+  ): Promise<string>;
   eliminarDocumento(nombreArchivo: string): Promise<boolean>;
   generarUrlDocumento(nombreArchivo: string): string;
 }
@@ -33,7 +38,8 @@ export class S3StorageService implements StorageServiceInterface {
   }
 
   async subirDocumento(
-    nombreArchivo: string, 
+    numeroIdentificacion: string, 
+    tipoDocumento: string, 
     buffer: Buffer, 
     contentType: string = 'application/pdf'
   ): Promise<string> {
@@ -42,7 +48,11 @@ export class S3StorageService implements StorageServiceInterface {
         throw new Error('AWS_BUCKET_NAME no está configurado');
       }
 
-      const key = `documentos/${nombreArchivo}`;
+      // Crear nombre de archivo con formato requerido
+      const fileName = `${numeroIdentificacion}_${tipoDocumento}.pdf`;
+      
+      // Crear ruta completa incluyendo la carpeta del usuario
+      const key = `documentos/${numeroIdentificacion}/${fileName}`;
       
       const params = {
         Bucket: this.bucketName,
@@ -53,7 +63,7 @@ export class S3StorageService implements StorageServiceInterface {
 
       await this.s3.send(new PutObjectCommand(params));
 
-      return this.generarUrlDocumento(nombreArchivo);
+      return this.generarUrlDocumento(key);
     } catch (error) {
       this.logger.error(`Error subiendo documento: ${error.message}`, error.stack);
       throw new Error(`No se pudo subir el documento: ${error.message}`);
@@ -65,12 +75,10 @@ export class S3StorageService implements StorageServiceInterface {
       if (!this.bucketName) {
         throw new Error('AWS_BUCKET_NAME no está configurado');
       }
-
-      const key = `documentos/${nombreArchivo}`;
       
       const params = {
         Bucket: this.bucketName,
-        Key: key,
+        Key: nombreArchivo,
       };
 
       await this.s3.send(new DeleteObjectCommand(params));
@@ -82,7 +90,7 @@ export class S3StorageService implements StorageServiceInterface {
     }
   }
 
-  generarUrlDocumento(nombreArchivo: string): string {
-    return `https://${this.bucketName}.s3.${this.region}.amazonaws.com/documentos/${nombreArchivo}`;
+  generarUrlDocumento(key: string): string {
+    return `https://${this.bucketName}.s3.${this.region}.amazonaws.com/${key}`;
   }
 }

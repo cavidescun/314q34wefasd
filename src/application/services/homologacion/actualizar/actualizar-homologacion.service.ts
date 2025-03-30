@@ -11,7 +11,8 @@ import { ActualizarHomologacionDto } from 'src/domain/homologaciones/actualizar-
 
 interface StorageService {
   subirDocumento(
-    nombreArchivo: string,
+    numeroIdentificacion: string,
+    tipoDocumento: string,
     buffer: Buffer,
     contentType?: string,
   ): Promise<string>;
@@ -86,9 +87,9 @@ export class ActualizarHomologacionUseCase {
       const archivosSubidos: string[] = [];
 
       if (archivos.tituloBachiller) {
-        const nombreArchivo = `${dto.numeroIdentificacion}/titulo-bachiller.pdf`;
         const urlDocBachiller = await this.storageService.subirDocumento(
-          nombreArchivo,
+          dto.numeroIdentificacion,
+          'titulo_bachiller',
           archivos.tituloBachiller,
           'application/pdf',
         );
@@ -97,9 +98,9 @@ export class ActualizarHomologacionUseCase {
       }
 
       if (archivos.titulo) {
-        const nombreArchivo = `${dto.numeroIdentificacion}/titulo-homologar.pdf`;
         const urlDocTituloHomologar = await this.storageService.subirDocumento(
-          nombreArchivo,
+          dto.numeroIdentificacion,
+          'titulo_homologar',
           archivos.titulo,
           'application/pdf',
         );
@@ -108,9 +109,9 @@ export class ActualizarHomologacionUseCase {
       }
 
       if (archivos.sabanaNotas) {
-        const nombreArchivo = `${dto.numeroIdentificacion}/sabana-notas.pdf`;
         const urlSabanaNotas = await this.storageService.subirDocumento(
-          nombreArchivo,
+          dto.numeroIdentificacion,
+          'sabana_notas',
           archivos.sabanaNotas,
           'application/pdf',
         );
@@ -119,9 +120,9 @@ export class ActualizarHomologacionUseCase {
       }
 
       if (archivos.cartaHomologacion) {
-        const nombreArchivo = `${dto.numeroIdentificacion}/carta-homologacion.pdf`;
         const urlCartaHomologacion = await this.storageService.subirDocumento(
-          nombreArchivo,
+          dto.numeroIdentificacion,
+          'carta_homologacion',
           archivos.cartaHomologacion,
           'application/pdf',
         );
@@ -130,9 +131,9 @@ export class ActualizarHomologacionUseCase {
       }
 
       if (archivos.contenidosProgramaticos) {
-        const nombreArchivo = `${dto.numeroIdentificacion}/contenidos-programaticos.pdf`;
         const urlContenidosProgramaticos = await this.storageService.subirDocumento(
-          nombreArchivo,
+          dto.numeroIdentificacion,
+          'contenidos_programaticos',
           archivos.contenidosProgramaticos,
           'application/pdf',
         );

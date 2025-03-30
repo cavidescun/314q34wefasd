@@ -15,7 +15,8 @@ import { CollectDataContactRepository } from '../../../domain/collect_data_conta
 
 interface StorageService {
   subirDocumento(
-    nombreArchivo: string,
+    numeroIdentificacion: string,
+    tipoDocumento: string,
     buffer: Buffer,
     contentType?: string,
   ): Promise<string>;
@@ -136,10 +137,10 @@ export class ProcesarRegistroInicialUseCase {
       const homologacionCreada =
         await this.homologacionRepository.create(homologacion);
 
-      const nombreArchivo = `${numeroIdentificacion}/documento-identidad.pdf`;
-
+      // Usar la nueva estructura de carpetas y nombres de archivo
       const urlDocumento = await this.storageService.subirDocumento(
-        nombreArchivo,
+        numeroIdentificacion,
+        'doc_identificacion',
         documentoBuffer,
         'application/pdf',
       );
