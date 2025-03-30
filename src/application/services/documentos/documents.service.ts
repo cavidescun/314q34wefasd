@@ -164,13 +164,11 @@ export class DocumentsService {
         throw new Error(`No se encontraron los documentos con id ${id}`);
       }
 
-      // Obtenemos la homologación para obtener el estudiante asociado
       const homologacion = await this.homologacionRepository.findById(documents.homologacionId);
       if (!homologacion) {
         throw new Error(`No se encontró la homologación asociada a los documentos`);
       }
 
-      // Obtenemos el estudiante para obtener el número de identificación
       const estudiante = await this.estudianteRepository.findById(homologacion.estudianteId);
       if (!estudiante) {
         throw new Error(`No se encontró el estudiante asociado a la homologación`);
@@ -194,8 +192,7 @@ export class DocumentsService {
       }, HttpStatus.BAD_REQUEST);
     }
   }
-  
-  // Nuevo método para subir un documento
+
   async subirDocumento(id: number, tipoDocumento: DocumentTipoEnum, archivo: Buffer) {
     try {
       const documents = await this.documentsRepository.findById(id);
@@ -204,19 +201,15 @@ export class DocumentsService {
         throw new Error(`No se encontraron los documentos con id ${id}`);
       }
 
-      // Obtenemos la homologación para obtener el estudiante asociado
       const homologacion = await this.homologacionRepository.findById(documents.homologacionId);
       if (!homologacion) {
         throw new Error(`No se encontró la homologación asociada a los documentos`);
       }
 
-      // Obtenemos el estudiante para obtener el número de identificación
       const estudiante = await this.estudianteRepository.findById(homologacion.estudianteId);
       if (!estudiante) {
         throw new Error(`No se encontró el estudiante asociado a la homologación`);
       }
-
-      // Mapear el tipo de documento a un nombre de archivo
       let tipoArchivo = '';
       switch (tipoDocumento) {
         case DocumentTipoEnum.URL_DOC_BACHILLER:
@@ -241,7 +234,6 @@ export class DocumentsService {
           tipoArchivo = 'documento';
       }
 
-      // Subir el documento a S3
       const url = await this.storageService.subirDocumento(
         estudiante.numeroIdentificacion,
         tipoArchivo,
@@ -249,7 +241,6 @@ export class DocumentsService {
         'application/pdf'
       );
 
-      // Actualizar la URL en la base de datos
       const documentsActualizados = await this.documentsRepository.updateDocumentUrl(
         id,
         tipoDocumento,

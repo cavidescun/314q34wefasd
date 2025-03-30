@@ -47,13 +47,9 @@ export class S3StorageService implements StorageServiceInterface {
       if (!this.bucketName) {
         throw new Error('AWS_BUCKET_NAME no está configurado');
       }
-
-      // Crear nombre de archivo con formato requerido
       const fileName = `${numeroIdentificacion}_${tipoDocumento}.pdf`;
-      
-      // Crear ruta completa incluyendo la carpeta del usuario
       const key = `documentos/${numeroIdentificacion}/${fileName}`;
-      
+
       const params = {
         Bucket: this.bucketName,
         Key: key,
@@ -62,8 +58,9 @@ export class S3StorageService implements StorageServiceInterface {
       };
 
       await this.s3.send(new PutObjectCommand(params));
+      const url = this.generarUrlDocumento(key);
 
-      return this.generarUrlDocumento(key);
+      return url;
     } catch (error) {
       this.logger.error(`Error subiendo documento: ${error.message}`, error.stack);
       throw new Error(`No se pudo subir el documento: ${error.message}`);

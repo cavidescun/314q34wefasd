@@ -136,8 +136,6 @@ export class ProcesarRegistroInicialUseCase {
 
       const homologacionCreada =
         await this.homologacionRepository.create(homologacion);
-
-      // Usar la nueva estructura de carpetas y nombres de archivo
       const urlDocumento = await this.storageService.subirDocumento(
         numeroIdentificacion,
         'doc_identificacion',

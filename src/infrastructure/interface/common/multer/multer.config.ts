@@ -1,11 +1,11 @@
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
-import { diskStorage } from 'multer';
+import { memoryStorage } from 'multer';
 import { extname } from 'path';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 export const multerOptions: MulterOptions = {
 
-  storage: diskStorage({}),
+  storage: memoryStorage(),
 
   limits: {
     fileSize: 10 * 1024 * 1024,

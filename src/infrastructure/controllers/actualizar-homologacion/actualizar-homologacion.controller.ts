@@ -100,6 +100,15 @@ export class ActualizarHomologacionController {
     },
   ) {
     try {
+      const filesReceived = files ? Object.keys(files).length : 0;
+      if (files) {
+        Object.entries(files).forEach(([key, value]) => {
+          if (value && value.length > 0) {
+            this.logger.log(`Archivo recibido: ${key}, tamaño: ${value[0].size} bytes, tipo: ${value[0].mimetype}`);
+          }
+        });
+      }
+      
       const archivos = {
         tituloBachiller: files.tituloBachiller?.[0]?.buffer,
         titulo: files.titulo?.[0]?.buffer,
@@ -107,13 +116,23 @@ export class ActualizarHomologacionController {
         cartaHomologacion: files.cartaHomologacion?.[0]?.buffer,
         contenidosProgramaticos: files.contenidosProgramaticos?.[0]?.buffer,
       };
-
-      return await this.actualizarHomologacionUseCase.execute(
+      const resultado = await this.actualizarHomologacionUseCase.execute(
         actualizarHomologacionDto,
         archivos,
       );
+      return resultado;
     } catch (error) {
-      throw new HttpException(error.message, error.status);
+      this.logger.error(`Error en controlador: ${error.message}`, error.stack);
+      throw error instanceof HttpException 
+        ? error 
+        : new HttpException(
+            {
+              success: false,
+              message: error.message || 'Error al actualizar la homologación',
+              error: error.message,
+            }, 
+            error.status || 500
+          );
     }
   }
 }
