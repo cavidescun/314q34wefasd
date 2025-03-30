@@ -1,0 +1,171 @@
+import { Injectable, Inject, HttpStatus, HttpException, Logger } from '@nestjs/common';
+import { Documents } from '../../../domain/documents/entity/documents.entity';
+import { DocumentsRepository } from '../../../domain/documents/repository/documents.repository';
+import { HomologacionRepository } from '../../../domain/homologaciones/repository/homologacion.repository';
+import { DocumentosDto } from 'src/domain/documents/dto/documentos.dto';
+import { DocumentUrlDto, DocumentTipoEnum } from 'src/domain/documents/document_url/dto/document_url.dto';
+
+@Injectable()
+export class DocumentsService {
+  private readonly logger = new Logger(DocumentsService.name);
+  
+  constructor(
+    @Inject('DocumentsRepository')
+    private readonly documentsRepository: DocumentsRepository,
+    @Inject('HomologacionRepository')
+    private readonly homologacionRepository: HomologacionRepository,
+  ) {}
+
+  async createDocuments(documents: Documents): Promise<Documents> {
+    try {
+      const homologacion = await this.homologacionRepository.findById(
+        documents.homologacionId,
+      );
+
+      if (!homologacion) {
+        throw new Error(
+          `No existe una homologación con el id ${documents.homologacionId}`,
+        );
+      }
+      
+      const existingDocuments =
+        await this.documentsRepository.findByHomologacionId(
+          documents.homologacionId,
+        );
+
+      if (existingDocuments) {
+        throw new Error(
+          `Ya existen documentos para la homologación con id ${documents.homologacionId}`,
+        );
+      }
+
+      documents.createdAt = new Date();
+      documents.updatedAt = new Date();
+
+      return this.documentsRepository.create(documents);
+    } catch (error) {
+      this.logger.error(`Error al crear documentos: ${error.message}`, error.stack);
+      throw new HttpException({
+        status: HttpStatus.BAD_REQUEST,
+        error: error.message,
+      }, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async obtenerDocumentosPorId(id: number) {
+    try {
+      const documents = await this.documentsRepository.findById(id);
+
+      if (!documents) {
+        throw new Error(`No existen documentos con el id ${id}`);
+      }
+
+      return {
+        message: 'Documentos recuperados exitosamente',
+        data: documents,
+      };
+    } catch (error) {
+      this.logger.error(`Error al obtener documentos por ID: ${error.message}`, error.stack);
+      
+      if (error.message.includes('No existen documentos')) {
+        throw new HttpException({
+          status: HttpStatus.NOT_FOUND,
+          error: error.message,
+        }, HttpStatus.NOT_FOUND);
+      }
+
+      throw new HttpException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: error.message,
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async obtenerDocumentosPorHomologacionId(homologacionId: string) {
+    try {
+      const documents = await this.documentsRepository.findByHomologacionId(homologacionId);
+
+      if (!documents) {
+        throw new Error(`No existen documentos para la homologación con id ${homologacionId}`);
+      }
+
+      return {
+        message: 'Documentos recuperados exitosamente',
+        data: documents,
+      };
+    } catch (error) {
+      this.logger.error(`Error al obtener documentos por homologación: ${error.message}`, error.stack);
+      
+      if (error.message.includes('No existen documentos')) {
+        throw new HttpException({
+          status: HttpStatus.NOT_FOUND,
+          error: error.message,
+        }, HttpStatus.NOT_FOUND);
+      }
+
+      throw new HttpException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: error.message,
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  async actualizarDocumentos(id: number, data: Partial<Documents>) {
+    try {
+      const documents = await this.documentsRepository.findById(id);
+
+      if (!documents) {
+        throw new Error(`No se encontraron los documentos con id ${id}`);
+      }
+
+      const updatedData = { 
+        ...data,
+        updatedAt: new Date(),
+      };
+
+      const documentsActualizados = await this.documentsRepository.update(id, updatedData);
+
+      return {
+        message: 'Documentos actualizados exitosamente',
+        data: documentsActualizados,
+      };
+    } catch (error) {
+      this.logger.error(`Error al actualizar documentos: ${error.message}`, error.stack);
+      throw new HttpException({
+        status: HttpStatus.BAD_REQUEST,
+        error: error.message,
+      }, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async actualizarUrlDocumento(id: number, documentUrlDto: DocumentUrlDto) {
+    try {
+      if (!Object.values(DocumentTipoEnum).includes(documentUrlDto.tipo)) {
+        throw new Error(`El tipo de documento '${documentUrlDto.tipo}' no es válido`);
+      }
+
+      const documents = await this.documentsRepository.findById(id);
+
+      if (!documents) {
+        throw new Error(`No se encontraron los documentos con id ${id}`);
+      }
+
+      const documentsActualizados = await this.documentsRepository.updateDocumentUrl(
+        id,
+        documentUrlDto.tipo,
+        documentUrlDto.url,
+      );
+
+      return {
+        message: 'Documento actualizado exitosamente',
+        data: documentsActualizados,
+      };
+    } catch (error) {
+      this.logger.error(`Error al actualizar URL de documento: ${error.message}`, error.stack);
+      throw new HttpException({
+        status: HttpStatus.BAD_REQUEST,
+        error: error.message,
+      }, HttpStatus.BAD_REQUEST);
+    }
+  }
+}
