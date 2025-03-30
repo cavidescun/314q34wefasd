@@ -198,8 +198,6 @@ export class HomologacionService {
 
   async agregarDocumentos(homologacionId: string, documentosDto: Omit<DocumentosDto, 'homologacionId'>) {
     try {
-      // Este método debe ser implementado usando ValidarDocumentosUseCase
-      // Para evitar dependencias circulares, es mejor llamar a este servicio desde el controlador
       throw new Error('Método no implementado');
     } catch (error) {
       this.logger.error(`Error al agregar documentos: ${error.message}`, error.stack);

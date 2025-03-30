@@ -12,6 +12,10 @@ import { ActualizarDatosAcademicosController } from './actualizar-datos-academic
 import { InstitucionController } from './institucion/institucion.controller';
 import { SenaController } from './reconocimiento-titulos/reconocimiento-titulos.controller';
 import { ProgramasUnicosController } from './programas/programas.controller';
+import { CarrerasAfinesController } from './carreras-afines/carreras-afines.controller';
+import { MetodologiasCarrerasController } from './metodologias/metodologias.controller';
+import { JornadasPensumController } from './jornadas/jornadas.controller';
+import { SedesCarrerasController } from './ciudades/ciudades.controller';
 
 @Module({
   imports: [
@@ -29,7 +33,11 @@ import { ProgramasUnicosController } from './programas/programas.controller';
     ActualizarDatosAcademicosController,
     InstitucionController,
     SenaController,
-    ProgramasUnicosController
+    ProgramasUnicosController,
+    CarrerasAfinesController,
+    MetodologiasCarrerasController,
+    JornadasPensumController,
+    SedesCarrerasController
   ],
 })
 export class ControllersModule {}

@@ -54,8 +54,6 @@ export class ValidarDocumentosUseCase {
         const result = await this.documentsService.createDocuments(newDocuments);
         documents = result as Documents;
       }
-
-      // Usando el método corregido para actualizar estatus
       await this.homologacionService.actualizarEstatusHomologacion(
         documentosDto.homologacionId,
         EstatusHomologacion.PENDIENTE,

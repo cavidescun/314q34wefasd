@@ -8,8 +8,6 @@ import { ConfigService } from '@nestjs/config';
 import { Inject } from '@nestjs/common';
 import { SecuraAuthService } from '../secura/secura-auth/auth.service';
 
-
-
 export interface DocumentValidationResult {
   status: 'valid' | 'invalid' | 'error';
   message: string;
@@ -31,9 +29,8 @@ export class OcrDocValidationService implements DocumentValidationService {
     @Inject(SecuraAuthService) private readonly authService: SecuraAuthService,
     private readonly configService: ConfigService,
   ) {
-    this.ocrEndpoint =  configService.get<string>('OCR_ENDPOINT') ||
-      'https://legantocc.cunapp.pro/api/Lector/LeerDocumento/';
-    this.ocrEmail = configService.get<string>('OCR_EMAIL') || 'fabrica_software@cun.edu.co';
+    this.ocrEndpoint = configService.get<string>('OCR_ENDPOINT') || '';
+    this.ocrEmail = configService.get<string>('OCR_EMAIL') || '';
     this.tempDir = this.configService.get<string>(
       'TEMP_DIR',
       path.join(process.cwd(), 'temp'),

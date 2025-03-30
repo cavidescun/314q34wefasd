@@ -50,8 +50,7 @@ async function bootstrap() {
       }),
     );
     app.enableCors();
-    const port = configService.get('PORT') || 3000;
-    await app.listen(port);
+    await app.listen(configService.get('PORT') || 4000);
 }
 
 bootstrap();

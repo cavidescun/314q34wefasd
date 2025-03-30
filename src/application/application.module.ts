@@ -13,6 +13,11 @@ import { DocumentsService } from './services/documentos/documents.service';
 import { InstitucionService } from './services/institucion/institucion.service';
 import { SenaService } from './services/reconocimiento-titulos/reconocimiento-titulos.service';
 import { ProgramasUnicosService } from './services/programas/programas.service';
+import { CarrerasAfinesService } from './services/carreras-afines/carreras-afines.service';
+import { MetodologiasCarrerasService } from './services/metodologias/metodologias.service';
+import { JornadasPensumService } from './services/jornadas/jornadas.service';
+import { SedesCarrerasService } from './services/ciudades/ciudades.service';
+
 @Module({
   imports: [
     DomainModule,
@@ -25,6 +30,10 @@ import { ProgramasUnicosService } from './services/programas/programas.service';
     InstitucionService,
     SenaService,
     ProgramasUnicosService,
+    CarrerasAfinesService,
+    MetodologiasCarrerasService,
+    JornadasPensumService,
+    SedesCarrerasService,
     ProcesarRegistroInicialUseCase,
     ObtenerEstudianteUseCase,
     ProcesarRegistroUseCase,
@@ -39,6 +48,10 @@ import { ProgramasUnicosService } from './services/programas/programas.service';
     InstitucionService,
     SenaService,
     ProgramasUnicosService,
+    CarrerasAfinesService,
+    MetodologiasCarrerasService,
+    JornadasPensumService,
+    SedesCarrerasService,
     ProcesarRegistroInicialUseCase,
     ObtenerEstudianteUseCase,
     ProcesarRegistroUseCase,
