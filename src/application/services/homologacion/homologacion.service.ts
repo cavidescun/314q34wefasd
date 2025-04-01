@@ -8,6 +8,7 @@ import { EstudianteRepository } from '../../../domain/estudiante/repository/estu
 import { DocumentsRepository } from '../../../domain/documents/repository/documents.repository';
 import { HomologacionDto } from 'src/domain/homologaciones/dto/homologacion.dto';
 import { DocumentosDto } from 'src/domain/documents/dto/documentos.dto';
+import { ContactRepository } from 'src/domain/contact/repository/contact.repository';
 
 @Injectable()
 export class HomologacionService {
@@ -20,6 +21,8 @@ export class HomologacionService {
     private readonly estudianteRepository: EstudianteRepository,
     @Inject('DocumentsRepository')
     private readonly documentsRepository: DocumentsRepository,
+    @Inject('ContactRepository')
+    private readonly contactRepository: ContactRepository
   ) {}
 
   async crearHomologacion(homologacionDto: HomologacionDto) {
@@ -238,6 +241,11 @@ export class HomologacionService {
           return null;
         }
 
+        const contact = await this.contactRepository.findByEstudianteId(estudiante.id)
+        let celular = 'No Registrado'
+        if(contact){
+          celular = contact.celular || 'NaN'
+        }
         let documentos = await this.documentsRepository.findByHomologacionId(homologacion.id);
         let urlsDocumentos: string[] = [];
         
@@ -253,14 +261,19 @@ export class HomologacionService {
         }
         
         return {
+          id_homologacion: homologacion.id,
           fecha: homologacion.createdAt,
           numeroDocumento: estudiante.numeroIdentificacion,
           nombreCompleto: estudiante.nombreCompleto,
+          celular: celular,
           nivelEstudio: homologacion.nivelEstudio || 'No especificado',
           carreraHom: homologacion.carreraHom || 'No especificada',
           carreraCun: homologacion.carreraCun || 'No especificada',
-          estado: homologacion.estatus,
-          documentos: urlsDocumentos,
+          estado: homologacion.estatus ,
+          jornada: homologacion.jornada || 'No especificada',
+          modalidad: homologacion.modalidad || 'No especificada',
+          ciudad: homologacion.ciudad || 'No especificada',
+          documentos: urlsDocumentos || 'No especificada',
           observaciones: homologacion.observaciones || 'Sin observaciones'
         };
       }));
