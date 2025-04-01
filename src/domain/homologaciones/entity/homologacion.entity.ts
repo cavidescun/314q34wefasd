@@ -19,6 +19,7 @@ export class Homologacion {
   carreraHom?: string;
   fechaGrado?: Date;
   nivelEstudio?: string;
+  observaciones?: string;
 
   constructor(params: {
     id?: string;
@@ -34,6 +35,7 @@ export class Homologacion {
     carreraHom?: string;
     fechaGrado?: Date;
     nivelEstudio?: string;
+    observaciones?: string;
   }) {
     this.id = params.id || '';
     this.estudianteId = params.estudianteId;
@@ -48,5 +50,6 @@ export class Homologacion {
     this.carreraHom = params.carreraHom;
     this.fechaGrado = params.fechaGrado;
     this.nivelEstudio = params.nivelEstudio;
+    this.observaciones = params.observaciones;
   }
 }

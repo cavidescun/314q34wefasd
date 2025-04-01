@@ -74,4 +74,13 @@ export class ActualizarEstatusDto {
   @IsNotEmpty({ message: 'El estatus es requerido' })
   @IsEnum(EstatusHomologacion, { message: 'El estatus debe ser: Pendiente, Aprobado, Rechazado o Sin Documentos' })
   estatus: EstatusHomologacion;
+  
+  @ApiProperty({ 
+    description: 'Observaciones o comentarios sobre el cambio de estatus (opcional)', 
+    example: 'Se aprueba la homologación después de revisar todos los documentos',
+    required: false
+  })
+  @IsOptional()
+  @IsString({ message: 'Las observaciones deben ser un texto' })
+  observaciones?: string;
 }

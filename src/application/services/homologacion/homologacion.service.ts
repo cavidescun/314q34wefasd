@@ -5,6 +5,7 @@ import {
 } from '../../../domain/homologaciones/entity/homologacion.entity';
 import { HomologacionRepository } from '../../../domain/homologaciones/repository/homologacion.repository';
 import { EstudianteRepository } from '../../../domain/estudiante/repository/estudiante.repository';
+import { DocumentsRepository } from '../../../domain/documents/repository/documents.repository';
 import { HomologacionDto } from 'src/domain/homologaciones/dto/homologacion.dto';
 import { DocumentosDto } from 'src/domain/documents/dto/documentos.dto';
 
@@ -17,6 +18,8 @@ export class HomologacionService {
     private readonly homologacionRepository: HomologacionRepository,
     @Inject('EstudianteRepository')
     private readonly estudianteRepository: EstudianteRepository,
+    @Inject('DocumentsRepository')
+    private readonly documentsRepository: DocumentsRepository,
   ) {}
 
   async crearHomologacion(homologacionDto: HomologacionDto) {
@@ -165,7 +168,7 @@ export class HomologacionService {
     }
   }
 
-  async actualizarEstatusHomologacion(id: string, estatus: EstatusHomologacion) {
+  async actualizarEstatusHomologacion(id: string, estatus: EstatusHomologacion, observaciones?: string) {
     try {
       const homologacion = await this.homologacionRepository.findById(id);
 
@@ -173,24 +176,40 @@ export class HomologacionService {
         throw new Error(`No se encontró la homologación con id ${id}`);
       }
 
-      const homologacionActualizada = await this.homologacionRepository.updateEstatus(id, estatus);
+      if (homologacion.estatus === EstatusHomologacion.SIN_DOCUMENTOS && 
+          estatus !== EstatusHomologacion.PENDIENTE) {
+        throw new Error(`No se puede cambiar de estado 'Sin Documentos' a '${estatus}'. Primero debe pasar a 'Pendiente'`);
+      }
+
+      const homologacionActualizada = await this.homologacionRepository.updateEstatus(id, estatus, observaciones);
 
       return {
-        message: 'Estatus de homologación actualizado exitosamente',
-        data: homologacionActualizada,
+        success: true,
+        message: `Estatus de homologación actualizado exitosamente a '${estatus}'`,
+        data: {
+          homologacion: homologacionActualizada,
+          observaciones: observaciones || 'No se proporcionaron observaciones',
+          cambioRealizado: {
+            estatusAnterior: homologacion.estatus,
+            nuevoEstatus: estatus,
+            fecha: new Date()
+          }
+        }
       };
     } catch (error) {
       this.logger.error(`Error al actualizar estatus: ${error.message}`, error.stack);
       
       if (error.message.includes('No se encontró la homologación')) {
         throw new HttpException({
-          status: HttpStatus.NOT_FOUND,
+          success: false,
+          message: error.message,
           error: error.message,
         }, HttpStatus.NOT_FOUND);
       }
 
       throw new HttpException({
-        status: HttpStatus.BAD_REQUEST,
+        success: false,
+        message: `Error al actualizar estatus de homologación: ${error.message}`,
         error: error.message,
       }, HttpStatus.BAD_REQUEST);
     }
@@ -205,6 +224,57 @@ export class HomologacionService {
         status: HttpStatus.BAD_REQUEST,
         error: error.message,
       }, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async obtenerDetallesHomologaciones() {
+    try {
+      const homologaciones = await this.homologacionRepository.findAll();
+
+      const detalles = await Promise.all(homologaciones.map(async (homologacion) => {
+        const estudiante = await this.estudianteRepository.findById(homologacion.estudianteId);
+        if (!estudiante) {
+          this.logger.warn(`No se encontró estudiante con ID ${homologacion.estudianteId} para homologación ${homologacion.id}`);
+          return null;
+        }
+
+        let documentos = await this.documentsRepository.findByHomologacionId(homologacion.id);
+        let urlsDocumentos: string[] = [];
+        
+        if (documentos) {
+          urlsDocumentos = [
+            documentos.urlDocBachiller,
+            documentos.urlDocIdentificacion,
+            documentos.urlDocTituloHomologar,
+            documentos.urlSabanaNotas,
+            documentos.urlCartaHomologacion,
+            documentos.urlContenidosProgramaticos
+          ].filter(url => url != null && url !== undefined);
+        }
+        
+        return {
+          fecha: homologacion.createdAt,
+          numeroDocumento: estudiante.numeroIdentificacion,
+          nombreCompleto: estudiante.nombreCompleto,
+          nivelEstudio: homologacion.nivelEstudio || 'No especificado',
+          carreraHom: homologacion.carreraHom || 'No especificada',
+          carreraCun: homologacion.carreraCun || 'No especificada',
+          estado: homologacion.estatus,
+          documentos: urlsDocumentos,
+          observaciones: homologacion.observaciones || 'Sin observaciones'
+        };
+      }));
+      const detallesFiltrados = detalles.filter(detalle => detalle !== null);
+      return {
+        message: 'Detalles de homologaciones recuperados exitosamente',
+        data: detallesFiltrados,
+      };
+    } catch (error) {
+      this.logger.error(`Error al obtener detalles de homologaciones: ${error.message}`, error.stack);
+      throw new HttpException({
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: error.message,
+      }, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 }

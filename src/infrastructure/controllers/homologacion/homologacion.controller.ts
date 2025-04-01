@@ -16,6 +16,7 @@ import { ValidarDocumentosUseCase } from '../../../application/services/document
 import { DocumentosDto } from 'src/domain/documents/dto/documentos.dto';
 import { ActualizarEstatusDto } from 'src/domain/homologaciones/dto/homologacion.dto';
 import { HomologacionDto } from 'src/domain/homologaciones/dto/homologacion.dto';
+import { HomologacionDetalleDto } from 'src/domain/homologaciones/detalle-homologacion/dto/homologaicon-detalle.dto';
 import {
   ApiTags,
   ApiOperation,
@@ -47,6 +48,24 @@ export class HomologacionController {
   async obtenerTodas(@Query('estatus') estatus?: EstatusHomologacion) {
     try {
       return await this.homologacionService.obtenerHomologacionesPorEstatus(estatus);
+    } catch (error) {
+      throw new HttpException(error.message, error.status);
+    }
+  }
+
+  @Get('detalles')
+  @ApiOperation({
+    summary: 'Obtener detalles completos de todas las homologaciones',
+    description: 'Retorna información detallada de todas las homologaciones, incluyendo datos del estudiante y documentos'
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Detalles de homologaciones recuperados exitosamente',
+    type: [HomologacionDetalleDto]
+  })
+  async obtenerDetallesHomologaciones() {
+    try {
+      return await this.homologacionService.obtenerDetallesHomologaciones();
     } catch (error) {
       throw new HttpException(error.message, error.status);
     }
@@ -119,14 +138,64 @@ export class HomologacionController {
 
   @Put(':id/estatus')
   @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
+  @ApiOperation({
+    summary: 'Actualizar estatus de una homologación',
+    description: 'Actualiza el estatus de una homologación específica con validaciones de negocio y observaciones opcionales'
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'ID de la homologación (UUID)',
+    example: 'a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6'
+  })
+  @ApiBody({ type: ActualizarEstatusDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Estatus de homologación actualizado exitosamente',
+    schema: {
+      properties: {
+        success: { type: 'boolean', example: true },
+        message: { type: 'string', example: "Estatus de homologación actualizado exitosamente a 'Aprobado'" },
+        data: {
+          type: 'object',
+          properties: {
+            homologacion: { type: 'object' },
+            observaciones: { type: 'string', example: 'Documentación completa y verificada' },
+            cambioRealizado: {
+              type: 'object',
+              properties: {
+                estatusAnterior: { type: 'string', example: 'Pendiente' },
+                nuevoEstatus: { type: 'string', example: 'Aprobado' },
+                fecha: { type: 'string', format: 'date-time' }
+              }
+            }
+          }
+        }
+      }
+    }
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Error en la validación o regla de negocio'
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Homologación no encontrada'
+  })
   async actualizarEstatus(
     @Param('id') id: string,
-    @Body() { estatus }: ActualizarEstatusDto,
+    @Body() actualizarEstatusDto: ActualizarEstatusDto,
   ) {
     try {
-      return await this.homologacionService.actualizarEstatusHomologacion(id, estatus);
+      return await this.homologacionService.actualizarEstatusHomologacion(
+        id, 
+        actualizarEstatusDto.estatus,
+        actualizarEstatusDto.observaciones
+      );
     } catch (error) {
-      throw new HttpException(error.message, error.status);
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(error.message, error.status || 500);
     }
   }
 

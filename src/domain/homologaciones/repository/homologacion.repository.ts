@@ -7,5 +7,6 @@ export interface HomologacionRepository {
   create(homologacion: Homologacion): Promise<Homologacion>;
   update(id: string, homologacion: Partial<Homologacion>): Promise<Homologacion>;
   delete(id: string): Promise<boolean>;
-  updateEstatus(id: string, estatus: EstatusHomologacion): Promise<Homologacion>;
+  updateEstatus(id: string, estatus: EstatusHomologacion, observaciones?: string): Promise<Homologacion>;
+  findAll(): Promise<Homologacion[]>;
 }

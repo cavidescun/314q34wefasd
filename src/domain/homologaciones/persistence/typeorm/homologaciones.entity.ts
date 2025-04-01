@@ -53,6 +53,9 @@ export class HomologacionTypeORM {
 
   @Column({ name: 'nivel_estudio', length: 45, nullable: true, type: 'varchar' })
   nivelEstudio: string | null;
+  
+  @Column({ name: 'observaciones', type: 'text', nullable: true })
+  observaciones: string | null;
 
   @ManyToOne(() => EstudianteTypeORM, estudiante => estudiante.homologaciones)
   @JoinColumn({ name: 'estudiante_id_estudiante' })

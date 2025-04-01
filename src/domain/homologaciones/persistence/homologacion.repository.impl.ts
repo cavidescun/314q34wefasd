@@ -32,6 +32,7 @@ export class HomologacionRepositoryImpl implements HomologacionRepository {
       carreraHom: orm.carreraHom === null ? undefined : orm.carreraHom,
       fechaGrado: orm.fechaGrado === null ? undefined : orm.fechaGrado,
       nivelEstudio: orm.nivelEstudio === null ? undefined : orm.nivelEstudio,
+      observaciones: orm.observaciones === null ? undefined : orm.observaciones,
     });
   }
 
@@ -50,6 +51,7 @@ export class HomologacionRepositoryImpl implements HomologacionRepository {
     orm.carreraHom = entity.carreraHom || null;
     orm.fechaGrado = entity.fechaGrado || null;
     orm.nivelEstudio = entity.nivelEstudio || null;
+    orm.observaciones = entity.observaciones || null;
     return orm;
   }
 
@@ -104,11 +106,18 @@ export class HomologacionRepositoryImpl implements HomologacionRepository {
   async updateEstatus(
     id: string,
     estatus: EstatusHomologacion,
+    observaciones?: string,
   ): Promise<Homologacion> {
-    await this.homologacionRepository.update(id, {
+    const updateData: any = {
       estatus,
       updatedAt: new Date(),
-    });
+    };
+    
+    if (observaciones !== undefined) {
+      updateData.observaciones = observaciones;
+    }
+    
+    await this.homologacionRepository.update(id, updateData);
 
     const updated = await this.homologacionRepository.findOne({
       where: { id },
@@ -117,5 +126,10 @@ export class HomologacionRepositoryImpl implements HomologacionRepository {
       throw new Error(`No existe una homologación con id ${id}`);
     }
     return this.toEntity(updated);
+  }
+  
+  async findAll(): Promise<Homologacion[]> {
+    const orms = await this.homologacionRepository.find();
+    return orms.map((orm) => this.toEntity(orm));
   }
 }

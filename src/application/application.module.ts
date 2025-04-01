@@ -5,7 +5,7 @@ import { ProcesarRegistroInicialUseCase } from './services/registro-inicial/proc
 import { ObtenerEstudianteUseCase } from './services/estudiantes/obteber-estudiantes/obtener-estudiante.service';
 import { ProcesarRegistroUseCase } from './services/estudiantes/registrar-estudiante/procesar-registro.service';
 import { ValidarDocumentosUseCase } from './services/documentos/validar-documentos/validar-documentos.service';
-import { ActualizarHomologacionUseCase } from './services/homologacion/actualizar/actualizar-homologacion.service';
+import { ActualizarHomologacionUseCase } from './services/homologacion/actualizar-homologacion/actualizar-homologacion.service';
 import { ActualizarDatosAcademicosUseCase } from './services/datos-academicos/actualizar-datos-academicos.service';
 import { EstudianteService } from './services/estudiantes/estudiante.service';
 import { HomologacionService } from './services/homologacion/homologacion.service';

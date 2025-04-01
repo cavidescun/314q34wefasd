@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiConsumes, ApiBody } from '@nestjs/swagger';
-import { ActualizarHomologacionUseCase } from '../../../application/services/homologacion/actualizar/actualizar-homologacion.service';
+import { ActualizarHomologacionUseCase } from '../../../application/services/homologacion/actualizar-homologacion/actualizar-homologacion.service';
 import { ActualizarHomologacionDto } from 'src/domain/homologaciones/actualizar-homologacion/dto/actualizar-homologacion.dto';
 import { multerOptions } from '../../interface/common/multer/multer.config';
 
