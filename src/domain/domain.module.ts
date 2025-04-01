@@ -15,6 +15,10 @@ import { CollectDataContactRepositoryImpl } from './collect_data_contact/persist
 import { InstitucionRepositoryImpl } from './institucion/persistence/institucion.repository.impl';
 import { SenaRepositoryImpl } from './sena/reconocimiento-titulos/persistence/reconocimiento-titulo.repository.impl';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { getPostgresConfig, 
+  getOracleConfig, 
+  getSqlServerConfig 
+} from '../infrastructure/interface/common/database/database.config';
 
 @Module({
   imports: [
@@ -22,30 +26,17 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        return {
-          type: 'postgres',
-          host: configService.get<string>('DB_HOST'),
-          port: configService.get<number>('DB_PORT'),
-          username: configService.get<string>('DB_USERNAME'),
-          password: configService.get<string>('DB_PASSWORD'),
-          database: configService.get<string>('DB_NAME'),
-          entities: [
-            EstudianteTypeORM,
-            ContactTypeORM,
-            HomologacionTypeORM,
-            DocumentsTypeORM,
-            CollectDataContactTypeORM,
-            InstitucionTypeORM,
-            SenaTypeORM,
-          ],
-          synchronize: false,
-          logging: false,
-          ssl: {
-            rejectUnauthorized: false,
-          },
-        };
-      },
+      useFactory: getPostgresConfig,
+    }),
+    // TypeOrmModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   inject: [ConfigService],
+    //   useFactory: getOracleConfig,
+    // }),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: getSqlServerConfig,
     }),
     TypeOrmModule.forFeature([
       EstudianteTypeORM,
