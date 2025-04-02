@@ -1,3 +1,4 @@
+// src/infrastructure/controllers/actualizar-datos-academicos/actualizar-datos-academicos.controller.ts
 import {
   Controller,
   Post,
@@ -27,12 +28,37 @@ export class ActualizarDatosAcademicosController {
   @ApiOperation({
     summary: 'Actualizar datos académicos del estudiante',
     description:
-      'Actualiza la carrera CUN, jornada, modalidad y ciudad de estudio del estudiante',
+      'Actualiza la carrera CUN, jornada, modalidad y ciudad de estudio del estudiante. También busca y actualiza información adicional como cod_pensum, cod_unidad, periodo y semestre.',
   })
   @ApiBody({ type: ActualizarDatosAcademicosDto })
   @ApiResponse({
     status: 200,
     description: 'Datos académicos actualizados correctamente',
+    schema: {
+      properties: {
+        success: { type: 'boolean', example: true },
+        message: { type: 'string', example: 'Datos académicos actualizados correctamente' },
+        data: {
+          type: 'object',
+          properties: {
+            estudiante: { type: 'object' },
+            homologacion: { 
+              type: 'object',
+              properties: {
+                carreraCun: { type: 'string' },
+                jornada: { type: 'string' },
+                modalidad: { type: 'string' },
+                ciudad: { type: 'string' },
+                codPensum: { type: 'string' },
+                codUnidad: { type: 'string' },
+                periodo: { type: 'string' },
+                semestre: { type: 'string' },
+              }
+            }
+          }
+        }
+      }
+    }
   })
   @ApiResponse({
     status: 400,

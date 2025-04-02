@@ -1,5 +1,6 @@
-import { IsString, IsNotEmpty } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+// src/domain/datos-academicos/dto/actualizar-datos-academicos.dto.ts
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class ActualizarDatosAcademicosDto {
   @ApiProperty({ description: 'Número de identificación del estudiante', example: '1023456789' })
@@ -26,4 +27,5 @@ export class ActualizarDatosAcademicosDto {
   @IsNotEmpty({ message: 'La ciudad es requerida' })
   @IsString({ message: 'La ciudad debe ser un texto' })
   ciudad: string;
+  
 }

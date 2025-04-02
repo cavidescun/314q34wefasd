@@ -1,3 +1,4 @@
+
 export enum EstatusHomologacion {
   PENDIENTE = 'Pendiente',
   APROBADO = 'Aprobado',
@@ -20,6 +21,11 @@ export class Homologacion {
   fechaGrado?: Date;
   nivelEstudio?: string;
   observaciones?: string;
+  // Nuevos campos
+  codPensum?: string;
+  codUnidad?: string;
+  periodo?: string;
+  semestre?: string;
 
   constructor(params: {
     id?: string;
@@ -36,6 +42,10 @@ export class Homologacion {
     fechaGrado?: Date;
     nivelEstudio?: string;
     observaciones?: string;
+    codPensum?: string;
+    codUnidad?: string;
+    periodo?: string;
+    semestre?: string;
   }) {
     this.id = params.id || '';
     this.estudianteId = params.estudianteId;
@@ -51,5 +61,9 @@ export class Homologacion {
     this.fechaGrado = params.fechaGrado;
     this.nivelEstudio = params.nivelEstudio;
     this.observaciones = params.observaciones;
+    this.codPensum = params.codPensum;
+    this.codUnidad = params.codUnidad;
+    this.periodo = params.periodo;
+    this.semestre = params.semestre;
   }
 }

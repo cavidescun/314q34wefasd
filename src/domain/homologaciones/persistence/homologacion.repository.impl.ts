@@ -1,3 +1,4 @@
+// src/domain/homologaciones/persistence/homologacion.repository.impl.ts
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -33,6 +34,11 @@ export class HomologacionRepositoryImpl implements HomologacionRepository {
       fechaGrado: orm.fechaGrado === null ? undefined : orm.fechaGrado,
       nivelEstudio: orm.nivelEstudio === null ? undefined : orm.nivelEstudio,
       observaciones: orm.observaciones === null ? undefined : orm.observaciones,
+      // Nuevos campos
+      codPensum: orm.codPensum === null ? undefined : orm.codPensum,
+      codUnidad: orm.codUnidad === null ? undefined : orm.codUnidad,
+      periodo: orm.periodo === null ? undefined : orm.periodo,
+      semestre: orm.semestre === null ? undefined : orm.semestre,
     });
   }
 
@@ -52,6 +58,11 @@ export class HomologacionRepositoryImpl implements HomologacionRepository {
     orm.fechaGrado = entity.fechaGrado || null;
     orm.nivelEstudio = entity.nivelEstudio || null;
     orm.observaciones = entity.observaciones || null;
+    // Nuevos campos
+    orm.codPensum = entity.codPensum || null;
+    orm.codUnidad = entity.codUnidad || null;
+    orm.periodo = entity.periodo || null;
+    orm.semestre = entity.semestre || null;
     return orm;
   }
 

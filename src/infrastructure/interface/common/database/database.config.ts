@@ -6,7 +6,6 @@ import { DocumentsTypeORM } from 'src/domain/documents/persistence/typeorm/docum
 import { CollectDataContactTypeORM } from 'src/domain/collect_data_contact/persistence/typeorm/collect_data_contact.entity';
 import { InstitucionTypeORM } from 'src/domain/institucion/persistence/typeorm/institucion.entity';
 import { SenaTypeORM } from 'src/domain/sena/reconocimiento-titulos/persistence/typeorm/reconocimiento-titulo.entity';
-
 import { ConfigService } from '@nestjs/config';
 
 export const getPostgresConfig = (
@@ -46,7 +45,7 @@ export const getOracleConfig = (
     name: 'oracle',
     type: 'oracle',
     host: configService.get<string>('ORACLE_HOST'),
-    // port: configService.get<number>('ORACLE_PORT'),
+    port: configService.get<number>('ORACLE_PORT'),
     username: configService.get<string>('ORACLE_USERNAME'),
     password: configService.get<string>('ORACLE_PASSWORD'),
     sid: configService.get<string>('ORACLE_SID'),

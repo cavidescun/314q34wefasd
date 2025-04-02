@@ -1,3 +1,4 @@
+
 import { Module } from '@nestjs/common';
 import { ApplicationModule } from '../../application/application.module';
 import { DomainModule } from '../../domain/domain.module';
@@ -16,6 +17,7 @@ import { CarrerasAfinesController } from './carreras-afines/carreras-afines.cont
 import { MetodologiasCarrerasController } from './metodologias/metodologias.controller';
 import { JornadasPensumController } from './jornadas/jornadas.controller';
 import { SedesCarrerasController } from './ciudades/ciudades.controller';
+import { MateriasHomologacionController } from './materias/materias.controller';
 
 @Module({
   imports: [
@@ -37,7 +39,8 @@ import { SedesCarrerasController } from './ciudades/ciudades.controller';
     CarrerasAfinesController,
     MetodologiasCarrerasController,
     JornadasPensumController,
-    SedesCarrerasController
+    SedesCarrerasController,
+    MateriasHomologacionController
   ],
 })
 export class ControllersModule {}

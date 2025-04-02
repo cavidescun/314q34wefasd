@@ -1,4 +1,7 @@
+
 import { Module, forwardRef } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
 import { DomainModule } from '../domain/domain.module';
 import { ExternalServicesModule } from '../infrastructure/external-services/external-services.module';
 import { ProcesarRegistroInicialUseCase } from './services/registro-inicial/procesar-registro-inicial.service';
@@ -17,11 +20,15 @@ import { CarrerasAfinesService } from './services/carreras-afines/carreras-afine
 import { MetodologiasCarrerasService } from './services/metodologias/metodologias.service';
 import { JornadasPensumService } from './services/jornadas/jornadas.service';
 import { SedesCarrerasService } from './services/ciudades/ciudades.service';
+import { MateriasHomologacionService } from './services/materias/materias.service';
+import { SenaTypeORM } from '../domain/sena/reconocimiento-titulos/persistence/typeorm/reconocimiento-titulo.entity';
 
 @Module({
   imports: [
     DomainModule,
     ExternalServicesModule,
+    ConfigModule,
+    TypeOrmModule.forFeature([SenaTypeORM]),
   ],
   providers: [
     EstudianteService,
@@ -34,6 +41,7 @@ import { SedesCarrerasService } from './services/ciudades/ciudades.service';
     MetodologiasCarrerasService,
     JornadasPensumService,
     SedesCarrerasService,
+    MateriasHomologacionService,
     ProcesarRegistroInicialUseCase,
     ObtenerEstudianteUseCase,
     ProcesarRegistroUseCase,
@@ -52,6 +60,7 @@ import { SedesCarrerasService } from './services/ciudades/ciudades.service';
     MetodologiasCarrerasService,
     JornadasPensumService,
     SedesCarrerasService,
+    MateriasHomologacionService,
     ProcesarRegistroInicialUseCase,
     ObtenerEstudianteUseCase,
     ProcesarRegistroUseCase,
