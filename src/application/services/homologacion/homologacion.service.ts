@@ -179,10 +179,10 @@ export class HomologacionService {
         throw new Error(`No se encontró la homologación con id ${id}`);
       }
 
-      if (homologacion.estatus === EstatusHomologacion.SIN_DOCUMENTOS && 
-          estatus !== EstatusHomologacion.PENDIENTE) {
-        throw new Error(`No se puede cambiar de estado 'Sin Documentos' a '${estatus}'. Primero debe pasar a 'Pendiente'`);
-      }
+      // if (homologacion.estatus === EstatusHomologacion.SIN_DOCUMENTOS && 
+      //     estatus !== EstatusHomologacion.PENDIENTE) {
+      //   throw new Error(`No se puede cambiar de estado 'Sin Documentos' a '${estatus}'. Primero debe pasar a 'Pendiente'`);
+      // }
 
       const homologacionActualizada = await this.homologacionRepository.updateEstatus(id, estatus, observaciones);
 

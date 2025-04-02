@@ -260,16 +260,10 @@ export class ActualizarHomologacionUseCase {
       }
 
       if (archivosSubidos.length > 0) {
-        this.logger.log(
-          `Actualizando estatus de homologación a: ${EstatusHomologacion.PENDIENTE}`,
-        );
         try {
           await this.homologacionRepository.updateEstatus(
             homologacion.id,
-            EstatusHomologacion.PENDIENTE,
-          );
-          this.logger.log(
-            `Estatus de homologación actualizado exitosamente a: ${EstatusHomologacion.PENDIENTE}`,
+            EstatusHomologacion.INICIADO,
           );
         } catch (updateError) {
           this.logger.error(
@@ -292,7 +286,7 @@ export class ActualizarHomologacionUseCase {
 
       if (archivosSubidos.length > 0) {
         mensaje += ` Archivos procesados: ${archivosSubidos.join(', ')}.`;
-        mensaje += ` El estado de la homologación ha sido actualizado a "${EstatusHomologacion.PENDIENTE}".`;
+        mensaje += ` El estado de la homologación ha sido actualizado a "${EstatusHomologacion.INICIADO}".`;
       }
 
       return {
@@ -302,7 +296,7 @@ export class ActualizarHomologacionUseCase {
           homologacion: homologacionActualizada,
           documents: documentosActualizados,
           estatusActualizado:
-            archivosSubidos.length > 0 ? EstatusHomologacion.PENDIENTE : null,
+            archivosSubidos.length > 0 ? EstatusHomologacion.INICIADO : null,
         },
       };
     } catch (error) {

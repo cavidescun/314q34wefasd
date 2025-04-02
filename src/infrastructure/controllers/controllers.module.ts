@@ -18,6 +18,7 @@ import { MetodologiasCarrerasController } from './metodologias/metodologias.cont
 import { JornadasPensumController } from './jornadas/jornadas.controller';
 import { SedesCarrerasController } from './ciudades/ciudades.controller';
 import { MateriasHomologacionController } from './materias/materias.controller';
+import { SenaHomologacionController } from './generar-excel/sena-homologacion/sena-homologacion.controller';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { MateriasHomologacionController } from './materias/materias.controller';
     MetodologiasCarrerasController,
     JornadasPensumController,
     SedesCarrerasController,
-    MateriasHomologacionController
+    MateriasHomologacionController,
+    SenaHomologacionController
   ],
 })
 export class ControllersModule {}

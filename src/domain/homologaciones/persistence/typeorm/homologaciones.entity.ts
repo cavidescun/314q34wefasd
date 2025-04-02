@@ -19,6 +19,9 @@ export class HomologacionTypeORM {
   @PrimaryColumn('uuid', { name: 'id_homologacion' })
   id: string;
 
+  @Column({ name: 'numero_homologacion', type: 'int', generated: 'increment', nullable: true })
+  numeroHomologacion: number;
+
   @Column({ name: 'estudiante_id_estudiante' })
   estudianteId: string;
 
@@ -58,7 +61,6 @@ export class HomologacionTypeORM {
   @Column({ name: 'observaciones', type: 'text', nullable: true })
   observaciones: string | null;
 
-  // Nuevos campos
   @Column({ name: 'cod_pensum', length: 50, nullable: true, type: 'varchar' })
   codPensum: string | null;
 

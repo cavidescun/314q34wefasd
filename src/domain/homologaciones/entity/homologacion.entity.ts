@@ -3,11 +3,13 @@ export enum EstatusHomologacion {
   PENDIENTE = 'Pendiente',
   APROBADO = 'Aprobado',
   RECHAZADO = 'Rechazado',
-  SIN_DOCUMENTOS = 'Sin Documentos'
+  SIN_DOCUMENTOS = 'Sin Documentos',
+  INICIADO = 'Iniciado'
 }
 
 export class Homologacion {
   id: string;
+  numeroHomologacion?: number;
   estudianteId: string;
   carreraCun?: string;
   estatus: EstatusHomologacion;
@@ -21,7 +23,6 @@ export class Homologacion {
   fechaGrado?: Date;
   nivelEstudio?: string;
   observaciones?: string;
-  // Nuevos campos
   codPensum?: string;
   codUnidad?: string;
   periodo?: string;
@@ -29,6 +30,7 @@ export class Homologacion {
 
   constructor(params: {
     id?: string;
+    numeroHomologacion?: number;
     estudianteId: string;
     carreraCun?: string;
     estatus?: EstatusHomologacion;
@@ -48,6 +50,7 @@ export class Homologacion {
     semestre?: string;
   }) {
     this.id = params.id || '';
+    this.numeroHomologacion = params.numeroHomologacion;
     this.estudianteId = params.estudianteId;
     this.carreraCun = params.carreraCun;
     this.estatus = params.estatus || EstatusHomologacion.SIN_DOCUMENTOS;

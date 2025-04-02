@@ -1,4 +1,3 @@
-// src/domain/homologaciones/persistence/homologacion.repository.impl.ts
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -21,6 +20,7 @@ export class HomologacionRepositoryImpl implements HomologacionRepository {
   private toEntity(orm: HomologacionTypeORM): Homologacion {
     return new Homologacion({
       id: orm.id,
+      numeroHomologacion: orm.numeroHomologacion,
       estudianteId: orm.estudianteId,
       carreraCun: orm.carreraCun === null ? undefined : orm.carreraCun,
       estatus: orm.estatus as EstatusHomologacion,
@@ -123,11 +123,11 @@ export class HomologacionRepositoryImpl implements HomologacionRepository {
       estatus,
       updatedAt: new Date(),
     };
-    
+
     if (observaciones !== undefined) {
       updateData.observaciones = observaciones;
     }
-    
+
     await this.homologacionRepository.update(id, updateData);
 
     const updated = await this.homologacionRepository.findOne({
@@ -138,7 +138,7 @@ export class HomologacionRepositoryImpl implements HomologacionRepository {
     }
     return this.toEntity(updated);
   }
-  
+
   async findAll(): Promise<Homologacion[]> {
     const orms = await this.homologacionRepository.find();
     return orms.map((orm) => this.toEntity(orm));

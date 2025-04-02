@@ -22,6 +22,7 @@ import { JornadasPensumService } from './services/jornadas/jornadas.service';
 import { SedesCarrerasService } from './services/ciudades/ciudades.service';
 import { MateriasHomologacionService } from './services/materias/materias.service';
 import { SenaTypeORM } from '../domain/sena/reconocimiento-titulos/persistence/typeorm/reconocimiento-titulo.entity';
+import { SenaHomologacionService } from './services/generar-excel/sena-homologacion/sena-homologacion.service';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { SenaTypeORM } from '../domain/sena/reconocimiento-titulos/persistence/t
     ValidarDocumentosUseCase,
     ActualizarHomologacionUseCase,
     ActualizarDatosAcademicosUseCase,
+    SenaHomologacionService,
   ],
   exports: [
     EstudianteService,
@@ -67,6 +69,7 @@ import { SenaTypeORM } from '../domain/sena/reconocimiento-titulos/persistence/t
     ValidarDocumentosUseCase,
     ActualizarHomologacionUseCase,
     ActualizarDatosAcademicosUseCase,
+    SenaHomologacionService,
   ],
 })
 export class ApplicationModule {}
