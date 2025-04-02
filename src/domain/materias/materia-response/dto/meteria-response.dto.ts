@@ -1,4 +1,3 @@
-// src/domain/materia-pensum/dto/materia-pensum-response.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { MateriaPensum } from '../../entity/materias.entity';
 
@@ -15,13 +14,27 @@ export class MateriasResponseDto {
     properties: {
       codUnidad: { type: 'string', example: 'ADSI' },
       codPensum: { type: 'string', example: '123456D' },
-      semestre: { type: 'string', example: '3' }
+      semestre: { type: 'string', example: '3' },
+      estudiante: { 
+        type: 'object', 
+        required: [],
+        properties: {
+          id: { type: 'string' },
+          nombreCompleto: { type: 'string' },
+          numeroIdentificacion: { type: 'string' }
+        }
+      }
     }
   })
   parametros: {
     codUnidad: string;
     codPensum: string;
     semestre: string;
+    estudiante?: {
+      id: string;
+      nombreCompleto: string;
+      numeroIdentificacion: string;
+    };
   };
 
   @ApiProperty({
