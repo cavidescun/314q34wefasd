@@ -46,8 +46,9 @@ export default registerAs('configuration', () => ({
 
   ZEPTOMAIL: {
     ZEPTOMAIL_API_KEY: process.env.ZEPTOMAIL_API_KEY ?? '',
-    ZEPTOMAIL_API_ENDPOINT: process.env.ZEPTOMAIL_API_ENDPOINT ?? '',
+    ZEPTOMAIL_API_ENDPOINT: process.env.ZEPTOMAIL_API_ENDPOINT ?? 'https://api.zeptomail.com/v1.1/email/',
     ZEPTOMAIL_FROM_EMAIL: process.env.ZEPTOMAIL_FROM_EMAIL ?? '',
     ZEPTOMAIL_FROM_NAME: process.env.ZEPTOMAIL_FROM_NAME ?? '',
+    ZEPTOMAIL_TIMEOUT: parseInt(process.env.ZEPTOMAIL_TIMEOUT ?? '10000', 10)
   },
 }));
