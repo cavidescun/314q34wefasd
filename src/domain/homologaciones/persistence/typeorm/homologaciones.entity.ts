@@ -1,4 +1,3 @@
-
 import {
   Entity,
   PrimaryGeneratedColumn,
@@ -72,6 +71,9 @@ export class HomologacionTypeORM {
 
   @Column({ name: 'semestre', length: 50, nullable: true, type: 'varchar' })
   semestre: string | null;
+
+  @Column({ name: 'id_ticket', length: 100, nullable: true, type: 'varchar' })
+  id_ticket: string | null;
 
   @ManyToOne(() => EstudianteTypeORM, estudiante => estudiante.homologaciones)
   @JoinColumn({ name: 'estudiante_id_estudiante' })

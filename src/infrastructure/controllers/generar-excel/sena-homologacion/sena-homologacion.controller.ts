@@ -11,8 +11,8 @@ import { Response } from 'express';
 import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { SenaHomologacionService } from 'src/application/services/generar-excel/sena-homologacion/sena-homologacion.service';
 
-@ApiTags('sena-homologacion')
-@Controller('sena-homologacion')
+@ApiTags('sena-homologacion excel')
+@Controller('sena-homologacion/excel')
 export class SenaHomologacionController {
   private readonly logger = new Logger(SenaHomologacionController.name);
 

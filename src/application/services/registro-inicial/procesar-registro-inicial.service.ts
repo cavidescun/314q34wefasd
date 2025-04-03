@@ -1,4 +1,10 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  Logger,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { Estudiante } from '../../../domain/estudiante/entity/estudiante.entity';
 import { Contact } from '../../../domain/contact/entity/contact.entity';
 import {
@@ -69,11 +75,11 @@ export class ProcesarRegistroInicialUseCase {
         nombreCompleto: string;
         numeroIdentificacion: string;
       };
+      procesoExistente?: boolean;
     };
     error?: string;
   }> {
     try {
-
       const collectDataContact = new CollectDataContact({
         celular: registroDto.celular,
         email: registroDto.email,
@@ -111,31 +117,97 @@ export class ProcesarRegistroInicialUseCase {
             'No se pudo extraer el nombre completo o número de identificación',
         };
       }
+      let estudianteExistente =
+        await this.estudianteRepository.findByNumeroIdentificacion(
+          numeroIdentificacion,
+        );
+      let contactoExistente: Contact | null = null;
+      let procesoExistente = false;
 
-      const estudiante = new Estudiante({
-        nombreCompleto,
-        numeroIdentificacion,
-      });
+      if (estudianteExistente) {
+        const homologacionesExistentes =
+          await this.homologacionRepository.findByEstudianteId(
+            estudianteExistente.id,
+          );
 
-      const estudianteCreado =
-        await this.estudianteRepository.create(estudiante);
+        if (homologacionesExistentes && homologacionesExistentes.length > 0) {
+          const homologacionPendiente = homologacionesExistentes.find(
+            (h) => h.estatus === EstatusHomologacion.PENDIENTE,
+          );
 
-      const contact = new Contact({
-        celular: registroDto.celular,
-        numFijo: registroDto.numFijo,
-        email: registroDto.email,
-        estudianteId: estudianteCreado.id,
-      });
+          if (homologacionPendiente) {
+            contactoExistente = await this.contactRepository.findByEstudianteId(
+              estudianteExistente.id,
+            );
 
-      const contactCreado = await this.contactRepository.create(contact);
+            return {
+              success: true,
+              message:
+                'Ya existe un proceso de homologación pendiente para este estudiante',
+              data: {
+                estudiante: estudianteExistente,
+                contact: contactoExistente || undefined,
+                homologacion: homologacionPendiente,
+                ocr_result: {
+                  nombreCompleto,
+                  numeroIdentificacion,
+                },
+                procesoExistente: true,
+              },
+            };
+          }
+          contactoExistente = await this.contactRepository.findByEstudianteId(
+            estudianteExistente.id,
+          );
+          if (contactoExistente) {
+            contactoExistente = await this.contactRepository.update(
+              contactoExistente.id,
+              estudianteExistente.id,
+              {
+                celular: registroDto.celular,
+                numFijo: registroDto.numFijo,
+                email: registroDto.email,
+                updatedAt: new Date(),
+              },
+            );
+          }
 
-      const homologacion = new Homologacion({
-        estudianteId: estudianteCreado.id,
+          procesoExistente = true;
+        }
+      }
+
+      let estudiante: Estudiante;
+      let contact: Contact;
+      let homologacion: Homologacion;
+
+      if (!estudianteExistente) {
+        estudiante = new Estudiante({
+          nombreCompleto,
+          numeroIdentificacion,
+        });
+        estudiante = await this.estudianteRepository.create(estudiante);
+      } else {
+        estudiante = estudianteExistente;
+      }
+
+      if (!contactoExistente) {
+        contact = new Contact({
+          celular: registroDto.celular,
+          numFijo: registroDto.numFijo,
+          email: registroDto.email,
+          estudianteId: estudiante.id,
+        });
+        contact = await this.contactRepository.create(contact);
+      } else {
+        contact = contactoExistente;
+      }
+
+      homologacion = new Homologacion({
+        estudianteId: estudiante.id,
         estatus: EstatusHomologacion.SIN_DOCUMENTOS,
       });
+      homologacion = await this.homologacionRepository.create(homologacion);
 
-      const homologacionCreada =
-        await this.homologacionRepository.create(homologacion);
       const urlDocumento = await this.storageService.subirDocumento(
         numeroIdentificacion,
         'doc_identificacion',
@@ -144,23 +216,25 @@ export class ProcesarRegistroInicialUseCase {
       );
 
       const documents = new Documents({
-        homologacionId: homologacionCreada.id,
+        homologacionId: homologacion.id,
         urlDocIdentificacion: urlDocumento,
       });
-
       await this.documentsRepository.create(documents);
 
       return {
         success: true,
-        message: 'Registro inicial procesado exitosamente',
+        message: procesoExistente
+          ? 'Se ha creado un nuevo proceso de homologación con los datos actualizados'
+          : 'Registro inicial procesado exitosamente',
         data: {
-          estudiante: estudianteCreado,
-          contact: contactCreado,
-          homologacion: homologacionCreada,
+          estudiante,
+          contact,
+          homologacion,
           ocr_result: {
             nombreCompleto,
             numeroIdentificacion,
           },
+          procesoExistente,
         },
       };
     } catch (error) {
@@ -168,11 +242,15 @@ export class ProcesarRegistroInicialUseCase {
         `Error en el proceso de registro inicial: ${error.message}`,
         error.stack,
       );
-      return {
-        success: false,
-        message: 'Error al procesar el registro inicial',
-        error: error.message,
-      };
+
+      throw new HttpException(
+        {
+          success: false,
+          message: 'Error al procesar el registro inicial',
+          error: error.message,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }

@@ -1,4 +1,3 @@
-
 export enum EstatusHomologacion {
   PENDIENTE = 'Pendiente',
   APROBADO = 'Aprobado',
@@ -27,6 +26,7 @@ export class Homologacion {
   codUnidad?: string;
   periodo?: string;
   semestre?: string;
+  id_ticket?: string;
 
   constructor(params: {
     id?: string;
@@ -48,6 +48,7 @@ export class Homologacion {
     codUnidad?: string;
     periodo?: string;
     semestre?: string;
+    id_ticket?: string;
   }) {
     this.id = params.id || '';
     this.numeroHomologacion = params.numeroHomologacion;
@@ -68,5 +69,6 @@ export class Homologacion {
     this.codUnidad = params.codUnidad;
     this.periodo = params.periodo;
     this.semestre = params.semestre;
+    this.id_ticket = params.id_ticket;
   }
 }

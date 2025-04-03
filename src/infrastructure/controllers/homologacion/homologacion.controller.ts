@@ -37,13 +37,52 @@ export class HomologacionController {
   @Get()
   @ApiOperation({
     summary: 'Obtener homologaciones por estatus',
-    description: 'Retorna la lista de homologaciones filtradas por estatus',
+    description: 'Retorna la lista detallada de homologaciones filtradas por estatus',
   })
   @ApiQuery({
     name: 'estatus',
     enum: EstatusHomologacion,
     required: true,
     description: 'Estatus de homologación',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista detallada de homologaciones recuperada exitosamente',
+    schema: {
+      properties: {
+        message: { type: 'string', example: 'Homologaciones con estatus Pendiente recuperadas exitosamente' },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id_homologacion: { type: 'string', example: 'a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6' },
+              fecha: { type: 'string', format: 'date-time', example: '2023-06-30T15:30:45.123Z' },
+              numeroDocumento: { type: 'string', example: '1023456789' },
+              nombreCompleto: { type: 'string', example: 'Juan Pérez González' },
+              celular: { type: 'string', example: '3121234567' },
+              nivelEstudio: { type: 'string', example: 'Pregrado' },
+              carreraHom: { type: 'string', example: 'Ingeniería Informática' },
+              carreraCun: { type: 'string', example: 'Ingeniería de Sistemas' },
+              estado: { type: 'string', example: 'Pendiente' },
+              jornada: { type: 'string', example: 'Diurna' },
+              modalidad: { type: 'string', example: 'Presencial' },
+              ciudad: { type: 'string', example: 'Bogotá' },
+              documentos: { 
+                type: 'array',
+                items: { type: 'string' },
+                example: ['https://storage.example.com/documents/doc1.pdf']
+              },
+              observaciones: { type: 'string', example: 'Sin observaciones' }
+            }
+          }
+        }
+      }
+    }
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Estatus no especificado',
   })
   async obtenerTodas(@Query('estatus') estatus?: EstatusHomologacion) {
     try {

@@ -119,9 +119,56 @@ export class HomologacionService {
 
       const homologaciones = await this.homologacionRepository.findByEstatus(estatus);
 
+      const detalles = await Promise.all(homologaciones.map(async (homologacion) => {
+        const estudiante = await this.estudianteRepository.findById(homologacion.estudianteId);
+        if (!estudiante) {
+          this.logger.warn(`No se encontró estudiante con ID ${homologacion.estudianteId} para homologación ${homologacion.id}`);
+          return null;
+        }
+
+        const contact = await this.contactRepository.findByEstudianteId(estudiante.id)
+        let celular = 'No Registrado'
+        if(contact){
+          celular = contact.celular || 'NaN'
+        }
+        
+        let documentos = await this.documentsRepository.findByHomologacionId(homologacion.id);
+        let urlsDocumentos: string[] = [];
+        
+        if (documentos) {
+          urlsDocumentos = [
+            documentos.urlDocBachiller,
+            documentos.urlDocIdentificacion,
+            documentos.urlDocTituloHomologar,
+            documentos.urlSabanaNotas,
+            documentos.urlCartaHomologacion,
+            documentos.urlContenidosProgramaticos
+          ].filter(url => url != null && url !== undefined);
+        }
+        
+        return {
+          id_homologacion: homologacion.id,
+          fecha: homologacion.createdAt,
+          numeroDocumento: estudiante.numeroIdentificacion,
+          nombreCompleto: estudiante.nombreCompleto,
+          celular: celular,
+          nivelEstudio: homologacion.nivelEstudio || 'No especificado',
+          carreraHom: homologacion.carreraHom || 'No especificada',
+          carreraCun: homologacion.carreraCun || 'No especificada',
+          estado: homologacion.estatus,
+          jornada: homologacion.jornada || 'No especificada',
+          modalidad: homologacion.modalidad || 'No especificada',
+          ciudad: homologacion.ciudad || 'No especificada',
+          documentos: urlsDocumentos || 'No especificada',
+          observaciones: homologacion.observaciones || 'Sin observaciones'
+        };
+      }));
+      
+      const detallesFiltrados = detalles.filter(detalle => detalle !== null);
+      
       return {
-        message: 'Homologaciones recuperadas exitosamente',
-        data: homologaciones,
+        message: `Homologaciones con estatus ${estatus} recuperadas exitosamente`,
+        data: detallesFiltrados,
       };
     } catch (error) {
       this.logger.error(`Error al obtener homologaciones por estatus: ${error.message}`, error.stack);
@@ -139,7 +186,6 @@ export class HomologacionService {
       }, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
   async actualizarHomologacion(id: string, homologacionDto: HomologacionDto) {
     try {
       const homologacion = await this.homologacionRepository.findById(id);

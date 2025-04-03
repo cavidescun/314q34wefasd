@@ -1,4 +1,3 @@
-// src/domain/materia-pensum/dto/materia-pensum.dto.ts
 import { IsString, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 

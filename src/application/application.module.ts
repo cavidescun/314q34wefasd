@@ -1,4 +1,3 @@
-
 import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
@@ -23,6 +22,7 @@ import { SedesCarrerasService } from './services/ciudades/ciudades.service';
 import { MateriasHomologacionService } from './services/materias/materias.service';
 import { SenaTypeORM } from '../domain/sena/reconocimiento-titulos/persistence/typeorm/reconocimiento-titulo.entity';
 import { SenaHomologacionService } from './services/generar-excel/sena-homologacion/sena-homologacion.service';
+import { FinalizarHomologacionService } from './services/homologacion/finalizar-homologacion/finalizar-homologacion.service';
 
 @Module({
   imports: [
@@ -50,6 +50,7 @@ import { SenaHomologacionService } from './services/generar-excel/sena-homologac
     ActualizarHomologacionUseCase,
     ActualizarDatosAcademicosUseCase,
     SenaHomologacionService,
+    FinalizarHomologacionService,
   ],
   exports: [
     EstudianteService,
@@ -70,6 +71,7 @@ import { SenaHomologacionService } from './services/generar-excel/sena-homologac
     ActualizarHomologacionUseCase,
     ActualizarDatosAcademicosUseCase,
     SenaHomologacionService,
+    FinalizarHomologacionService,
   ],
 })
 export class ApplicationModule {}

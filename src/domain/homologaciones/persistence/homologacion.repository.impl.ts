@@ -34,11 +34,11 @@ export class HomologacionRepositoryImpl implements HomologacionRepository {
       fechaGrado: orm.fechaGrado === null ? undefined : orm.fechaGrado,
       nivelEstudio: orm.nivelEstudio === null ? undefined : orm.nivelEstudio,
       observaciones: orm.observaciones === null ? undefined : orm.observaciones,
-      // Nuevos campos
       codPensum: orm.codPensum === null ? undefined : orm.codPensum,
       codUnidad: orm.codUnidad === null ? undefined : orm.codUnidad,
       periodo: orm.periodo === null ? undefined : orm.periodo,
       semestre: orm.semestre === null ? undefined : orm.semestre,
+      id_ticket: orm.id_ticket === null ? undefined : orm.id_ticket,
     });
   }
 
@@ -58,11 +58,11 @@ export class HomologacionRepositoryImpl implements HomologacionRepository {
     orm.fechaGrado = entity.fechaGrado || null;
     orm.nivelEstudio = entity.nivelEstudio || null;
     orm.observaciones = entity.observaciones || null;
-    // Nuevos campos
     orm.codPensum = entity.codPensum || null;
     orm.codUnidad = entity.codUnidad || null;
     orm.periodo = entity.periodo || null;
     orm.semestre = entity.semestre || null;
+    orm.id_ticket = entity.id_ticket || null;
     return orm;
   }
 
@@ -127,6 +127,26 @@ export class HomologacionRepositoryImpl implements HomologacionRepository {
     if (observaciones !== undefined) {
       updateData.observaciones = observaciones;
     }
+
+    await this.homologacionRepository.update(id, updateData);
+
+    const updated = await this.homologacionRepository.findOne({
+      where: { id },
+    });
+    if (!updated) {
+      throw new Error(`No existe una homologación con id ${id}`);
+    }
+    return this.toEntity(updated);
+  }
+
+  async updateIdTicket(
+    id: string,
+    id_ticket: string,
+  ): Promise<Homologacion> {
+    const updateData: any = {
+      id_ticket,
+      updatedAt: new Date(),
+    };
 
     await this.homologacionRepository.update(id, updateData);
 

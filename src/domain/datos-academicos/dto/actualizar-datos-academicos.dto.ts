@@ -1,4 +1,3 @@
-// src/domain/datos-academicos/dto/actualizar-datos-academicos.dto.ts
 import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 

@@ -1,4 +1,3 @@
-// src/application/services/datos-academicos/actualizar-datos-academicos.service.ts
 import { Inject, Injectable, Logger, HttpStatus, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

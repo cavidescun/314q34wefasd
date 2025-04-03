@@ -1,4 +1,3 @@
-
 import { Module } from '@nestjs/common';
 import { ApplicationModule } from '../../application/application.module';
 import { DomainModule } from '../../domain/domain.module';
@@ -11,7 +10,7 @@ import { RegistroInicialController } from './registro-inicial/registro-inicial.c
 import { ActualizarHomologacionController } from './actualizar-homologacion/actualizar-homologacion.controller';
 import { ActualizarDatosAcademicosController } from './actualizar-datos-academicos/actualizar-datos-academicos.controller';
 import { InstitucionController } from './institucion/institucion.controller';
-import { SenaController } from './reconocimiento-titulos/reconocimiento-titulos.controller';
+// import { SenaController } from './reconocimiento-titulos/reconocimiento-titulos.controller';
 import { ProgramasUnicosController } from './programas/programas.controller';
 import { CarrerasAfinesController } from './carreras-afines/carreras-afines.controller';
 import { MetodologiasCarrerasController } from './metodologias/metodologias.controller';
@@ -19,6 +18,7 @@ import { JornadasPensumController } from './jornadas/jornadas.controller';
 import { SedesCarrerasController } from './ciudades/ciudades.controller';
 import { MateriasHomologacionController } from './materias/materias.controller';
 import { SenaHomologacionController } from './generar-excel/sena-homologacion/sena-homologacion.controller';
+import { FinalizarHomologacionController } from './finalizar-homologacion/finalizar-homologacion.controller';
 
 @Module({
   imports: [
@@ -35,14 +35,15 @@ import { SenaHomologacionController } from './generar-excel/sena-homologacion/se
     ActualizarHomologacionController,
     ActualizarDatosAcademicosController,
     InstitucionController,
-    SenaController,
+    // SenaController,
     ProgramasUnicosController,
     CarrerasAfinesController,
     MetodologiasCarrerasController,
     JornadasPensumController,
     SedesCarrerasController,
     MateriasHomologacionController,
-    SenaHomologacionController
+    SenaHomologacionController,
+    FinalizarHomologacionController
   ],
 })
 export class ControllersModule {}

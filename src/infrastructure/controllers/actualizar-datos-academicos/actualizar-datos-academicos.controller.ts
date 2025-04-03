@@ -1,4 +1,3 @@
-// src/infrastructure/controllers/actualizar-datos-academicos/actualizar-datos-academicos.controller.ts
 import {
   Controller,
   Post,

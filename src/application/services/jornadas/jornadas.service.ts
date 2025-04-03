@@ -1,4 +1,3 @@
-// src/application/services/jornadas-pensum/jornadas-pensum.service.ts
 import { Injectable, HttpStatus, HttpException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
