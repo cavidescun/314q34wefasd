@@ -25,7 +25,7 @@ export class FinalizarHomologacionController {
   @ApiOperation({
     summary: 'Finalizar proceso de homologación',
     description:
-      'Completa el proceso de homologación, enviando un correo de confirmación al estudiante y cambiando el estado a Pendiente',
+      'Completa el proceso de homologación, enviando un correo de confirmación al estudiante, creando un ticket en ZOHO y cambiando el estado a Pendiente',
   })
   @ApiBody({ type: FinalizarHomologacionDto })
   @ApiResponse({
@@ -45,6 +45,14 @@ export class FinalizarHomologacionController {
                 enviado: { type: 'boolean', example: true },
                 destinatario: { type: 'string', example: 'estudiante@ejemplo.com' },
                 mensaje: { type: 'string', example: 'Correo enviado exitosamente' }
+              }
+            },
+            zoho: {
+              type: 'object',
+              properties: {
+                enviado: { type: 'boolean', example: true },
+                ticketNumber: { type: 'string', example: '2822211' },
+                mensaje: { type: 'string', example: 'Ticket creado exitosamente en ZOHO' }
               }
             }
           }

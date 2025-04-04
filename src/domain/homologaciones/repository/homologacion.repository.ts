@@ -8,6 +8,6 @@ export interface HomologacionRepository {
   update(id: string, homologacion: Partial<Homologacion>): Promise<Homologacion>;
   delete(id: string): Promise<boolean>;
   updateEstatus(id: string, estatus: EstatusHomologacion, observaciones?: string): Promise<Homologacion>;
-  updateIdTicket(id: string, id_ticket: string): Promise<Homologacion>;
+  updateIdTicket(id: string): Promise<Homologacion>;
   findAll(): Promise<Homologacion[]>;
 }

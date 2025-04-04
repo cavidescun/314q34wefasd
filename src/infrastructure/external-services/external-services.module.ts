@@ -4,6 +4,7 @@ import { S3StorageService } from './storage/storage.service';
 import { OcrDocValidationService } from './secura/docValidation.service';
 import { AuthModule } from './secura/secura-auth/auth.module';
 import { ZeptoMailService } from './email/zeptomail.service';
+import { ZohoService } from './zoho/zoho.service';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { ZeptoMailService } from './email/zeptomail.service';
     S3StorageService,
     OcrDocValidationService,
     ZeptoMailService,
+    ZohoService,
     {
       provide: 'StorageService',
       useClass: S3StorageService,
@@ -25,6 +27,10 @@ import { ZeptoMailService } from './email/zeptomail.service';
     {
       provide: ZeptoMailService,
       useClass: ZeptoMailService,
+    },
+    {
+      provide: ZohoService,
+      useClass: ZohoService,
     }
   ],
   exports: [
@@ -33,6 +39,7 @@ import { ZeptoMailService } from './email/zeptomail.service';
     S3StorageService,
     OcrDocValidationService,
     ZeptoMailService,
+    ZohoService,
   ],
 })
 export class ExternalServicesModule {}

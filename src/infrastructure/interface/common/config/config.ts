@@ -51,4 +51,11 @@ export default registerAs('configuration', () => ({
     ZEPTOMAIL_FROM_NAME: process.env.ZEPTOMAIL_FROM_NAME ?? '',
     ZEPTOMAIL_TIMEOUT: parseInt(process.env.ZEPTOMAIL_TIMEOUT ?? '10000', 10)
   },
+
+  ZOHO: {
+    ZOHO_API_URL: process.env.ZOHO_API_URL ?? '',
+    ZOHO_USERNAME: process.env.ZOHO_USERNAME ?? '',
+    ZOHO_PASSWORD: process.env.ZOHO_PASSWORD ?? '',
+    ZOHO_WEBHOOK_KEY: process.env.ZOHO_WEBHOOK_KEY ?? ''
+  },
 }));

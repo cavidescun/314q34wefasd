@@ -141,10 +141,8 @@ export class HomologacionRepositoryImpl implements HomologacionRepository {
 
   async updateIdTicket(
     id: string,
-    id_ticket: string,
   ): Promise<Homologacion> {
     const updateData: any = {
-      id_ticket,
       updatedAt: new Date(),
     };
 
